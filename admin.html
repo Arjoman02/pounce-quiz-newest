@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Admin - Pounce Quiz</title>
+</head>
+<body>
+<h2>Admin Panel</h2>
+<button onclick="resetQuestion()">Reset Answers</button>
+<ul id="answers"></ul>
+
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+<script>
+const socket = io();
+let quizId = prompt("Enter Quiz ID");
+
+socket.emit('adminJoin', quizId);
+
+socket.on('newAnswer', entry => {
+  const li = document.createElement('li');
+  li.textContent = entry.team + " - " + entry.name + ": " + entry.answer;
+  document.getElementById('answers').appendChild(li);
+});
+
+function resetQuestion() {
+  socket.emit('resetQuestion', quizId);
+  document.getElementById('answers').innerHTML = '';
+}
+</script>
+</body>
+</html>
